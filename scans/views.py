@@ -55,6 +55,13 @@ def scan_home_page(request):
 def scan_hx(request):
 
     sku = request.POST.get("sku")
+    internet_status = 1
+
+    scans = Scan.objects.all().order_by("-time_scan")
+
+    has_failed_scans = [
+        x for x in scans if (x.time_upload is None) and (x.scan_id is None)
+    ]
 
     if sku != "":
         new_scan = Scan(sku=sku, location=settings.LOCATION_CODE)
@@ -86,21 +93,33 @@ def scan_hx(request):
                 new_scan.time_upload = response.json()["time_upload"]
                 new_scan.save()
 
+            if response.status_code == 403:
+                print("API KEY ERROR")
+
         except requests.exceptions.ConnectionError:
+            internet_status = 0
             print("There was a connection problem. Saving the scan locally.")
             pass
 
         return render(
             request,
             "partials/scan_in_table.html",
-            {"scans": Scan.objects.all().order_by("-time_scan")},
+            {
+                "scans": scans,
+                "internet_status": internet_status,
+                "has_failed_scans": has_failed_scans != [],
+            },
         )
 
     else:
         return render(
             request,
             "partials/scan_in_table.html",
-            {"scans": Scan.objects.all().order_by("-time_scan")},
+            {
+                "scans": scans,
+                "internet_status": internet_status,
+                "has_failed_scans": has_failed_scans != [],
+            },
         )
 
 
@@ -129,6 +148,9 @@ def send_failed_hx(request):
                 scan.scan_id = response.json()["scan_id"]
                 scan.time_upload = response.json()["time_upload"]
                 scan.save()
+
+            if response.status_code == 403:
+                print("API KEY ERROR")
 
         except requests.exceptions.ConnectionError:
             print("There was a connection problem. Saving the scan locally.")

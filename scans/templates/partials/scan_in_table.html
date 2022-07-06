@@ -20,7 +20,7 @@
           <td scope="col">{{scan.time_scan}}</td>
           <td scope="col">{% if scan.time_upload == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
           <td scope="col">{% if scan.scan_id == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
-          <td scope="col"></td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">FAILURE</span>{% else %}<span style="color: green">SUCCESS</span>{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>

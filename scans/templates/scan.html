@@ -3,7 +3,7 @@
 {% block content %}
 <div class='scan-heading'>
   <div class="text-center">
-    <h1 style="font-size: 200px;">BDDW SCAN</h1>
+    <h5 style="font-size: 75px;">BDDW SCAN</h5>
     <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 5s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">{% if internet_status == 1 %}<span style="color: green">YOU HAVE INTERNET</p>{% else %}<span style="color: red">NO INTERNET</span>{% endif %}</p>
     <div class="header-padding" style="height:15px">
     </div>
@@ -43,7 +43,7 @@
           <td scope="col">{{scan.time_scan}}</td>
           <td scope="col">{% if scan.time_upload == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
           <td scope="col">{% if scan.scan_id == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
-          <td scope="col"></td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">FAILURE</span>{% else %}<span style="color: green">SUCCESS</span>{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
