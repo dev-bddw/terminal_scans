@@ -1,0 +1,34 @@
+<div id="table">
+  <div style="height:50px;"></div>
+    <table class="table mb-5">
+      <thead>
+        <tr>
+          <th scope="col">SKU</th>
+          <th scope="col">LOCATION</th>
+          <th scope="col">TIME SCANNED</th>
+          <th scope="col">TIME UPLOADED</th>
+          <th scope="col">SCAN ID</th>
+          <th scope="col"><button style="width: 200px" hx-target="#table" hx-get="{% url 'scans:resend_scans_hx' %}" type="button" class="btn btn-sm btn-primary" {% if internet_status == 1 and has_failed_scans == True %} {% else %}disabled {% endif %} >RESEND FAILED SCANS</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody style="font-size: 10px;">
+        {% for scan in scans  %}
+        <tr>
+          <td scope="col">{{scan.sku}}</td>
+          <td scope="col">{{scan.location}}</td>
+          <td scope="col">{{scan.time_scan}}</td>
+          <td scope="col">{% if scan.time_upload == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
+          <td scope="col"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+
+<script>
+  document.getElementById('sku').value = '';
+  document.getElementById('sku').select();
+</script>
