@@ -105,7 +105,7 @@ def scan_hx(request):
             request,
             "partials/scan_in_table.html",
             {
-                "scans": scans,
+                "scans": Scan.objects.all().order_by("-time_scan"),
                 "internet_status": internet_status,
                 "has_failed_scans": has_failed_scans != [],
             },
