@@ -32,6 +32,8 @@ def scan_home_page(request):
 
     scans = Scan.objects.all().order_by("-time_scan")
 
+    has_failed_scans = False
+
     for scan in scans:
         if scan.time_upload is None and scan.scan_id is None:
             has_failed_scans = True
