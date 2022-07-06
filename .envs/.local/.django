@@ -2,5 +2,3 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
-LOCATION_CODE=1
-APP_KEY=61d3d8888785127b8876f8474e68b937ccfb413f

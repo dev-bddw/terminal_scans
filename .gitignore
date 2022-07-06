@@ -275,4 +275,5 @@ terminal_scans/media/
 .ipython/
 .env
 .envs/*
+.envs/.local/.scans
 !.envs/.local/
