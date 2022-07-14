@@ -15,9 +15,9 @@
             hx-target="#table"
             hx-get="{% url 'scans:resend_scans_hx' %}"
             type="button" class="btn btn-sm btn-primary"
-            {% if internet_status == 1 and has_failed_scans == True %}
-            {% else %}disabled {% endif %} >
-            RESEND FAILED SCANS</button>
+            {% if scan_button_on == False %}
+            disabled{% else %}{% endif %} >
+            SEND SCANS</button>
           </th>
         </tr>
       </thead>
@@ -27,9 +27,9 @@
           <td scope="col">{{scan.sku}}</td>
           <td scope="col">{{scan.location}}</td>
           <td scope="col">{{scan.time_scan}}</td>
-          <td scope="col">{% if scan.time_upload == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
-          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
-          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">FAILURE</span>{% else %}<span style="color: green">SUCCESS</span>{% endif %}</td>
+          <td scope="col">{% if scan.time_upload == None %}<span style="color: red">NOT UPLOADED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">NOT UPLOADED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">NOT UPLOADED</span>{% else %}<span style="color: green">UPLOADED</span>{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>

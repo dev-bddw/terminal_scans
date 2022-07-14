@@ -1,1 +1,1 @@
-<p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 5s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">{% if internet_status == 1 %}<span style="color: green">YOU HAVE INTERNET</p>{% else %}<span style="color: red">NO INTERNET</span>{% endif %}</p>
+<p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 5s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">{% if is_connected == True %}<span style="color: green">YOU HAVE INTERNET</p>{% else %}<span style="color: red">NO INTERNET</span>{% endif %}</p>

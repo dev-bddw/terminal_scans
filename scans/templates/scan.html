@@ -4,7 +4,9 @@
 <div class='scan-heading'>
   <div class="text-center">
     <h5 style="font-size: 75px;">BDDW SCAN</h5>
-    <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">{% if internet_status == 1 %}<span style="color: green">YOU HAVE INTERNET</p>{% else %}<span style="color: red">NO INTERNET</span>{% endif %}</p>
+    <h# style="font-size: 50px;">LOCATION NAME</h3>
+
+    <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">ESTABLISHING CONNECTION</p>
     <div class="header-padding" style="height:15px">
     </div>
   </div>
@@ -31,16 +33,16 @@
           <th scope="col">TIME SCANNED</th>
           <th scope="col">TIME UPLOADED</th>
           <th scope="col">SCAN ID</th>
-          <th id="resend-failed" hx-get="{% url 'scans:hx_button_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" scope="col">
+          <th id="resend-failed" hx-get="{% url 'scans:hx_button_poll' %}" hx-trigger="every 5s" hx-target="this" hx-swap="outerHTML" scope="col">
             <button
-
             style="width: 200px"
             hx-target="#table"
             hx-get="{% url 'scans:resend_scans_hx' %}"
             type="button" class="btn btn-sm btn-primary"
-            {% if internet_status == 1 and has_failed_scans == True %}
-            {% else %}disabled {% endif %} >
-            RESEND FAILED SCANS</button>
+            {% if scan_button_on == False %}
+            disabled
+            {% endif %} >
+            SEND SCANS</button>
           </th>
         </tr>
       </thead>
@@ -50,9 +52,9 @@
           <td scope="col">{{scan.sku}}</td>
           <td scope="col">{{scan.location}}</td>
           <td scope="col">{{scan.time_scan}}</td>
-          <td scope="col">{% if scan.time_upload == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
-          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">UPLOAD FAILED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
-          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">FAILURE</span>{% else %}<span style="color: green">SUCCESS</span>{% endif %}</td>
+          <td scope="col">{% if scan.time_upload == None %}<span style="color: red">NOT UPLOADED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">NOT UPLOADED</span>{% else %}{{scan.scan_id}}{% endif %}</td>
+          <td scope="col">{% if scan.scan_id == None %}<span style="color: red">NOT UPLOADED</span>{% else %}<span style="color: green">UPLOADED</span>{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -64,6 +66,10 @@
 
 {% block inline_javascript %}
   <script>
-  document.getElementById('sku').select();
+  function orientInput(){
+    const sku_input = document.getElementById('sku');
+    sku_input.select()
+  }
+  setInterval(orientInput, 10000);
   </script>
 {% endblock inline_javascript %}

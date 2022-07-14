@@ -1,11 +1,10 @@
 <th id="resend-failed" hx-get="{% url 'scans:hx_button_poll' %}" hx-trigger="every 5s" hx-target="this" hx-swap="outerHTML" scope="col">
     <button
-
     style="width: 200px"
     hx-target="#table"
     hx-get="{% url 'scans:resend_scans_hx' %}"
     type="button" class="btn btn-sm btn-primary"
-    {% if internet_status == 1 and has_failed_scans == True %}
-    {% else %}disabled {% endif %} >
-    RESEND FAILED SCANS</button>
+    {% if scan_button_on == False %}
+    disabled{% else %}{% endif %} >
+    SEND SCANS</button>
   </th>
