@@ -1,0 +1,5 @@
+#! /bin/sh
+echo INITIALIZING TERMINAL SCANS
+wsl.exe -u root service docker status || wsl.exe -u root service docker start
+sleep 10s
+cd /home/bddw/django-projects/terminal_scans/ && sudo docker-compose -f local.yml down && git pull origin master && sudo docker-compose -f local.yml run --rm django python manage.py migrate && sudo docker-compose -f local.yml up --build
