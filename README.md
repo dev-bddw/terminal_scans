@@ -14,44 +14,40 @@ in powershell w/ admin priv:
 open remove programs and remove whatever distro windows installed
 
 install ubuntu 20.04 from microsoft app store
-You may have to run wsl_update_x64.msi to update wsl kernel
 
-sudo apt-get updates
-sudo apt-get upgrade
+open ubuntu 20.04
 
+set unix username to bddw
 
-create user bddw
-install docker
-install docker-compose
+> sudo apt-get updates
+> sudo apt-get upgrade
 
-sudo apt-get updates
-sudo apt-get upgrade
-
+Install docker & docker-compose
 
 # remove pw prompt for bddw user
 
-sudo visudo
-at buttom
-bddw ALL=(ALL) NOPASSWD: ALL
+> sudo visudo
+at bottom
+> bddw ALL=(ALL) NOPASSWD: ALL
 
 # clone repo
 
-mkdir /home/bddw/django-projects/
-cd django-projects
-git clone https://github.com/dev-bddw/terminal_scans.git
+> mkdir /home/bddw/django-projects/
+> cd django-projects
+> git clone https://github.com/dev-bddw/terminal_scans.git
 
 # config local settings
 
-touch /home/bddw/django-projects/.envs/.local/.scans
-sudo vim /home/bddw/django-projects/.envs/.local/.scans
+> touch /home/bddw/django-projects/.envs/.local/.scans
+> sudo vim /home/bddw/django-projects/.envs/.local/.scans
 
-Set .envs/.local/.scans:
-    APP_KEY=<API KEY HERE>
-    LOCATION_CODE=<LOCATION_CODE>
+Add this to .envs/.local/.scans:
+> APP_KEY=<API KEY HERE>
+> LOCATION_CODE=<LOCATION_CODE>
 
-# copy bash script from
+# copy bash script from terminal_scans dir
 
-cp /home/bddw/django-projects/terminal_scans/wsl-init /etc/wsl-init
+> cp /home/bddw/django-projects/terminal_scans/wsl-init /etc/wsl-init
 
 # make it executable
 
@@ -64,9 +60,3 @@ RUN WSL -- start wsl.exe any user on startup
 START TERMINAL SCANS -- start bash script any user on startup
 
 # ALL DONE
-
-
-
-# last
-In wsl make script executable
-sudo chmod +x /etc/init-wsl
