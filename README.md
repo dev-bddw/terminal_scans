@@ -33,16 +33,20 @@ at bottom
 # clone repo
 
 > mkdir /home/bddw/django-projects/
+
 > cd django-projects
+
 > git clone https://github.com/dev-bddw/terminal_scans.git
 
 # config local settings
 
 > touch /home/bddw/django-projects/.envs/.local/.scans
+
 > sudo vim /home/bddw/django-projects/.envs/.local/.scans
 
 Add this to .envs/.local/.scans:
 > APP_KEY=<API KEY HERE>
+
 > LOCATION_CODE=<LOCATION_CODE>
 
 # copy bash script from terminal_scans dir
@@ -56,7 +60,9 @@ sudo chmod +x /etc/wsl-init
 # schedule tasks to run wsl & start docker at localhost:8000 on startup
 
 Add tasks from one drive task folder
+
 RUN WSL -- start wsl.exe any user on startup
+
 START TERMINAL SCANS -- start bash script any user on startup
 
 # ALL DONE
