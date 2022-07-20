@@ -20,6 +20,7 @@ open ubuntu 20.04
 set unix username to bddw
 
 > sudo apt-get updates
+
 > sudo apt-get upgrade
 
 Install docker & docker-compose
@@ -27,7 +28,9 @@ Install docker & docker-compose
 # remove pw prompt for bddw user
 
 > sudo visudo
+
 at bottom
+
 > bddw ALL=(ALL) NOPASSWD: ALL
 
 # clone repo
@@ -45,6 +48,7 @@ at bottom
 > sudo vim /home/bddw/django-projects/.envs/.local/.scans
 
 Add this to .envs/.local/.scans:
+
 > APP_KEY=<API KEY HERE>
 
 > LOCATION_CODE=<LOCATION_CODE>
