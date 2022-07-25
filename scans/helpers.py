@@ -13,3 +13,20 @@ def is_connected(hostname):
     except Exception:
         pass  # we ignore any errors, returning False
     return False
+
+
+def sortly_conversion(sku) -> str:
+
+    from .sortly import sku_dict
+
+    if "sy://" in sku:
+
+        sortly_id = sku.split("/")[-1]
+
+        bddw_sku = sku_dict[sortly_id]
+
+        return bddw_sku
+
+    else:
+
+        return sku

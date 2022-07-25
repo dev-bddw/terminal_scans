@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import render
 from requests.structures import CaseInsensitiveDict
 
-from .helpers import is_connected
+from .helpers import is_connected, sortly_conversion
 from .models import Scan
 
 
@@ -56,13 +56,23 @@ def scan_home_page(request):
 
 def scan_hx(request):
 
-    sku = request.POST.get("sku")
+    qr_code = request.POST.get("sku")
+
+    try:
+        scan_dict = json.loads(qr_code)
+
+    except json.decoder.JSONDecodeError:
+        pass
+
+    sku = sortly_conversion(scan_dict["sku-bto-cli"])
 
     scans = Scan.objects.all().order_by("-time_scan")
 
-    if sku != "" and sku[0] != " ":
+    if qr_code != "" and qr_code[0] != " ":
 
-        new_scan = Scan(sku=sku, location=settings.LOCATION_CODE)
+        new_scan = Scan(
+            sku=sku, tracking=scan_dict["tracking"], location=settings.LOCATION_CODE
+        )
         new_scan.save()
 
         return render(
@@ -97,6 +107,7 @@ def send_scans_hx(request):
             scan_data = {
                 "sku": scan.sku,
                 "time_scan": scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                "tracking": scan.tracking,
                 "location": scan.location,
             }
             data_json = json.dumps(scan_data)

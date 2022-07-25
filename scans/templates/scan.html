@@ -13,7 +13,7 @@
 
   <div class="row text-center">
     <div class="col">
-        <p style="color: black; size: 100px;">SCAN QR &#129147; TYPE SKU</p>
+        <p style="color: black; size: 100px;">SCAN QR &#129147; SCAN QR</p>
         <input type='text' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#table" hx-swap="outerHTML"  hx-trigger="keyup changed delay:500ms, keyup[enterKey] from:body" hx-post="{% url 'scans:scan_hx' %}" id='sku' name='sku'>
     </div>
     <div class="row">
@@ -28,7 +28,8 @@
     <table class="table mb-5">
       <thead>
         <tr>
-          <th scope="col">SKU</th>
+          <th scope="col">SKU/CLI/BTO</th>
+          <th scope="col">TRACKING NUMBER</th>
           <th scope="col">LOCATION</th>
           <th scope="col">TIME SCANNED</th>
           <th scope="col">TIME UPLOADED</th>
@@ -50,6 +51,7 @@
         {% for scan in scans  %}
         <tr>
           <td scope="col">{{scan.sku}}</td>
+          <td scope="col">{{scan.tracking}}</td>
           <td scope="col">{{scan.location}}</td>
           <td scope="col">{{scan.time_scan}}</td>
           <td scope="col">{% if scan.time_upload == None %}<span style="color: red">NOT UPLOADED</span>{% else %}{{scan.time_upload}}{% endif %}</td>
