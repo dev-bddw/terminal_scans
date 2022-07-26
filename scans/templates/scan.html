@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class='scan-heading'>
@@ -13,10 +14,11 @@
 
   <div class="row text-center">
     <div class="col">
+        <a style="font-size: 12px;" href="{% static 'pdf/scanner_manual.pdf' %}">CONFIG SCANNER</a>
         <p style="color: black; size: 100px;">SCAN QR &#129147; SCAN QR</p>
         <input type='text' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#table" hx-swap="outerHTML"  hx-trigger="keyup changed delay:500ms" hx-post="{% url 'scans:scan_hx' %}" id='sku' name='sku'>
     </div>
-    <div class="row">
+    <div class="pt-2 row">
       <div class="col">
       </div>
     </div>

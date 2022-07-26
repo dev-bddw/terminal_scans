@@ -284,3 +284,43 @@ APP_KEY = env(
     "APP_KEY",
     default=None,
 )
+
+
+JAZZMIN_SETTINGS = {
+    "site_logo": "images/bddwlogo.svg",
+    "welcome_sign": "WE ARE SCANS",
+    "show_ui_builder": True,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-lightblue",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": True,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "darkly",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-dark",
+        "secondary": "btn-dark",
+        "info": "btn-dark",
+        "warning": "btn-dark",
+        "danger": "btn-dark",
+        "success": "btn-dark",
+    },
+    "actions_sticky_top": False,
+}
