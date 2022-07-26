@@ -15,18 +15,26 @@ def is_connected(hostname):
     return False
 
 
-def sortly_conversion(sku) -> str:
+def process_sortly(code: str) -> dict:
+    """
+    Processes the archaic sortly label code.
+    Expects a string like this: sy://o2/m_qrcode_single/S7X1ZT0106
+    Returns a scan dictionary w/ bddw native sku and .xx as tracking number
+    if it has '.xx'.
+
+    """
 
     from .sortly import sku_dict
 
-    if "sy://" in sku:
+    sortly_id = code.split("/")[-1]
 
-        sortly_id = sku.split("/")[-1]
+    bddw_sku = sku_dict[sortly_id]
+    tracking_number = ""
 
-        bddw_sku = sku_dict[sortly_id]
+    print(bddw_sku)
 
-        return bddw_sku
+    if "." in bddw_sku:
+        tracking_number = bddw_sku.split(".")[1]
+        bddw_sku = bddw_sku.split(".")[0]
 
-    else:
-
-        return sku
+    return {"item": bddw_sku, "tracking": tracking_number}

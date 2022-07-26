@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import render
 from requests.structures import CaseInsensitiveDict
 
-from .helpers import is_connected, sortly_conversion
+from .helpers import is_connected, process_sortly
 from .models import Scan
 
 
@@ -58,50 +58,50 @@ def scan_hx(request):
 
     qr_code = request.POST.get("sku")
 
-    if qr_code[0] == "{" and qr_code[-1] == "}":
+    if qr_code != "" and qr_code[0] != " ":
 
-        try:
-            scan_dict = json.loads(qr_code)
+        if qr_code[0] == "{" and qr_code[-1] == "}":
 
-        except json.decoder.JSONDecodeError:
-            pass
+            try:
+                scan_dict = json.loads(qr_code)
 
-        sku = sortly_conversion(scan_dict["item"])
+            except json.decoder.JSONDecodeError:
+                pass
 
-        scans = Scan.objects.all().order_by("-time_scan")
+        elif "sy://" in qr_code:
 
-        if qr_code != "" and qr_code[0] != " ":
-
-            new_scan = Scan(
-                sku=sku, tracking=scan_dict["tracking"], location=settings.LOCATION_CODE
-            )
-            new_scan.save()
-
-            return render(
-                request,
-                "partials/hx_table.html",
-                {
-                    "scans": Scan.objects.all().order_by("-time_scan"),
-                    "scan_button_on": False,
-                },
-            )
+            scan_dict = process_sortly(qr_code)
 
         else:
-            return render(
-                request,
-                "partials/hx_table.html",
-                {
-                    "scans": scans,
-                    "scan_button_on": False,
-                },
-            )
+
+            scan_dict = {
+                "item": "SCAN FAILED",
+                "tracking": "",
+                "location": settings.LOCATION_CODE,
+            }
+
+        new_scan = Scan(
+            sku=scan_dict["item"],
+            tracking=scan_dict["tracking"],
+            location=settings.LOCATION_CODE,
+        )
+        new_scan.save()
+
+    return render(
+        request,
+        "partials/hx_table.html",
+        {
+            "scans": Scan.objects.all().order_by("-time_scan"),
+            "scan_button_on": False,
+        },
+    )
 
 
 def send_scans_hx(request):
 
     internet_status = 0
 
-    for scan in Scan.objects.filter(time_upload=None):
+    for scan in Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED"):
 
         if is_connected("google.com"):
 
