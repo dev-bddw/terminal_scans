@@ -58,41 +58,43 @@ def scan_hx(request):
 
     qr_code = request.POST.get("sku")
 
-    try:
-        scan_dict = json.loads(qr_code)
+    if qr_code[0] == "{" and qr_code[-1] == "}":
 
-    except json.decoder.JSONDecodeError:
-        pass
+        try:
+            scan_dict = json.loads(qr_code)
 
-    sku = sortly_conversion(scan_dict["sku-bto-cli"])
+        except json.decoder.JSONDecodeError:
+            pass
 
-    scans = Scan.objects.all().order_by("-time_scan")
+        sku = sortly_conversion(scan_dict["item"])
 
-    if qr_code != "" and qr_code[0] != " ":
+        scans = Scan.objects.all().order_by("-time_scan")
 
-        new_scan = Scan(
-            sku=sku, tracking=scan_dict["tracking"], location=settings.LOCATION_CODE
-        )
-        new_scan.save()
+        if qr_code != "" and qr_code[0] != " ":
 
-        return render(
-            request,
-            "partials/hx_table.html",
-            {
-                "scans": Scan.objects.all().order_by("-time_scan"),
-                "scan_button_on": False,
-            },
-        )
+            new_scan = Scan(
+                sku=sku, tracking=scan_dict["tracking"], location=settings.LOCATION_CODE
+            )
+            new_scan.save()
 
-    else:
-        return render(
-            request,
-            "partials/hx_table.html",
-            {
-                "scans": scans,
-                "scan_button_on": False,
-            },
-        )
+            return render(
+                request,
+                "partials/hx_table.html",
+                {
+                    "scans": Scan.objects.all().order_by("-time_scan"),
+                    "scan_button_on": False,
+                },
+            )
+
+        else:
+            return render(
+                request,
+                "partials/hx_table.html",
+                {
+                    "scans": scans,
+                    "scan_button_on": False,
+                },
+            )
 
 
 def send_scans_hx(request):

@@ -4,7 +4,7 @@
 <div class='scan-heading'>
   <div class="text-center">
     <h5 style="font-size: 75px;">BDDW SCAN</h5>
-    <h# style="font-size: 50px;">LOCATION NAME</h3>
+    <h3 style="font-size: 50px;">LOCATION NAME</h3>
 
     <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">ESTABLISHING CONNECTION</p>
     <div class="header-padding" style="height:15px">
@@ -14,7 +14,7 @@
   <div class="row text-center">
     <div class="col">
         <p style="color: black; size: 100px;">SCAN QR &#129147; SCAN QR</p>
-        <input type='text' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#table" hx-swap="outerHTML"  hx-trigger="keyup changed delay:500ms, keyup[enterKey] from:body" hx-post="{% url 'scans:scan_hx' %}" id='sku' name='sku'>
+        <input type='text' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#table" hx-swap="outerHTML"  hx-trigger="keyup changed delay:500ms" hx-post="{% url 'scans:scan_hx' %}" id='sku' name='sku'>
     </div>
     <div class="row">
       <div class="col">
@@ -61,6 +61,9 @@
         {% endfor %}
       </tbody>
     </table>
+</div>
+<div style="background-color:light-grey;" class="text-center container">
+  <p style="font-size: 10px;">BDDW SCANS VERSION: {{APP_VERSION}}</p>
 </div>
 
 
