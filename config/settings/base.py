@@ -182,7 +182,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "terminal_scans.users.context_processors.allauth_settings",
-                "scans.context_processors.version",
+                "scans.version_processor.version",
             ],
         },
     }
@@ -284,6 +284,3 @@ APP_KEY = env(
     "APP_KEY",
     default=None,
 )
-
-
-# CONTEXT PROCESSOR
