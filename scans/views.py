@@ -50,6 +50,7 @@ def scan_home_page(request):
             "scans": scans,
             "is_connected": False,
             "scan_button_on": False,
+            "location_name": settings.LOCATION_NAME,
         },
     )
 

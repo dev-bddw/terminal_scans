@@ -285,6 +285,11 @@ APP_KEY = env(
     default=None,
 )
 
+LOCATION_NAME = env(
+    "LOCATION_NAME",
+    default="LOCATION NAME",
+)
+
 
 JAZZMIN_SETTINGS = {
     "site_logo": "images/bddwlogo.svg",

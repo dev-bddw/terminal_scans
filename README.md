@@ -43,15 +43,17 @@ at bottom
 
 # config local settings
 
-> touch /home/bddw/django-projects/.envs/.local/.scans
+> touch /home/bddw/django-projects/terminal_scans/.envs/.local/.scans
 
-> sudo vim /home/bddw/django-projects/.envs/.local/.scans
+> sudo vim /home/bddw/django-projects/terminal_scans/.envs/.local/.scans
 
 Add this to .envs/.local/.scans:
 
 > APP_KEY=<API KEY HERE>
 
 > LOCATION_CODE=<LOCATION_CODE>
+
+>LOCATION_NAME=
 
 # copy bash script from terminal_scans dir
 
