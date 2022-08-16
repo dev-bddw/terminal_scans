@@ -1,2 +1,2 @@
 def version(request):
-    return {"APP_VERSION": "1.0"}
+    return {"APP_VERSION": "1.1"}
