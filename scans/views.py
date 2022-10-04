@@ -106,34 +106,39 @@ def send_scans_hx(request):
 
         if is_connected("google.com"):
 
-            app_key = settings.APP_KEY
-            scan_data = {
-                "sku": scan.sku,
-                "time_scan": scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
-                "tracking": scan.tracking,
-                "location": scan.location,
-            }
-            data_json = json.dumps(scan_data)
+            try:
 
-            headers = CaseInsensitiveDict()
-            headers["Accept"] = "application/json"
-            headers["Content-type"] = "application/json"
-            headers["Authorization"] = "Token {}".format(app_key)
+                app_key = settings.APP_KEY
+                scan_data = {
+                    "sku": scan.sku,
+                    "time_scan": scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                    "tracking": scan.tracking,
+                    "location": scan.location,
+                }
+                data_json = json.dumps(scan_data)
 
-            response = requests.post(
-                "https://bddwscans.com/endpoint/", data=data_json, headers=headers
-            )
+                headers = CaseInsensitiveDict()
+                headers["Accept"] = "application/json"
+                headers["Content-type"] = "application/json"
+                headers["Authorization"] = "Token {}".format(app_key)
 
-            if response.status_code == 200:
-                print(response.json())
-                scan.scan_id = response.json()["scan_id"]
-                scan.time_upload = response.json()["time_upload"]
-                scan.save()
+                response = requests.post(
+                    "https://bddwscans.com/endpoint/", data=data_json, headers=headers
+                )
 
-            if response.status_code == 403:
-                print("API KEY ERROR")
+                if response.status_code == 200:
+                    print(response.json())
+                    scan.scan_id = response.json()["scan_id"]
+                    scan.time_upload = response.json()["time_upload"]
+                    scan.save()
 
-            internet_status = 1
+                if response.status_code == 403:
+                    print("API KEY ERROR")
+
+                internet_status = 1
+            
+            except KeyError:
+                pass
 
     return render(
         request,
