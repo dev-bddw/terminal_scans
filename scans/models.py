@@ -1,5 +1,5 @@
 from django.db import models
-
+import uuid
 
 class Scan(models.Model):
 
@@ -9,7 +9,7 @@ class Scan(models.Model):
 
     time_scan = models.DateTimeField(auto_now_add=True)
 
-    scan_id = models.UUIDField(blank=True, null=True)
+    scan_id = models.UUIDField(default=uuid.uuid4, blank=True, null=True)
 
     location = models.IntegerField()
 

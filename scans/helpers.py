@@ -28,13 +28,6 @@ def process_sortly(code: str) -> dict:
 
     sortly_id = code.split("/")[-1]
 
-    bddw_sku = sku_dict[sortly_id]
-    tracking_number = ""
-
-    print(bddw_sku)
-
-    if "." in bddw_sku:
-        tracking_number = bddw_sku.split(".")[1]
-        bddw_sku = bddw_sku.split(".")[0]
+    bddw_sku,tracking_number = sku_dict.get(sortly_id, ('',''))
 
     return {"item": bddw_sku, "tracking": tracking_number}
