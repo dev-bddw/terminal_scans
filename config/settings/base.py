@@ -290,6 +290,8 @@ LOCATION_NAME = env(
     default="LOCATION NAME",
 )
 
+SCANS_API_ENDPOINT = env("SCANS_API_ENDPOINT", default='https://bddwscans.com/endpoint/')
+
 
 JAZZMIN_SETTINGS = {
     "site_logo": "images/bddwlogo.svg",

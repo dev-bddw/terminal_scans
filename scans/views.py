@@ -22,7 +22,7 @@ def button_test_hx(request):
     has_non_uploaded = False
 
     for scan in scans:
-        if scan.scan_id is None:
+        if scan.time_upload is None and scan.sku != 'SCAN FAILED':
             has_non_uploaded = True
             break
 
@@ -57,37 +57,33 @@ def scan_home_page(request):
 
 def scan_hx(request):
 
-    qr_code = request.POST.get("sku")
+    scanner_input = request.POST.get("sku")
 
-    if qr_code != "" and qr_code[0] != " ":
+    if scanner_input != "" and scanner_input[0] != " " and 'sy://' not in scanner_input:
+        
+        try:
+            scan_dict = json.loads(scanner_input)
+        except json.decoder.JSONDecodeError:
+            scan_dict = {'tracking': ''}
+    
+    elif "sy://" in scanner_input:
+        scan_dict = process_sortly(scanner_input)
+    
+    else: 
+        scan_dict = {'tracking': ''}
 
-        if qr_code[0] == "{" and qr_code[-1] == "}":
+    if scan_dict['tracking'] != '':
 
-            try:
-                scan_dict = json.loads(qr_code)
-
-            except json.decoder.JSONDecodeError:
-                pass
-
-        elif "sy://" in qr_code:
-
-            scan_dict = process_sortly(qr_code)
-
-        else:
-
-            scan_dict = {
-                "item": "SCAN FAILED",
-                "tracking": "",
-                "location": settings.LOCATION_CODE,
-            }
-
-        new_scan = Scan(
+        Scan.objects.create(
             sku=scan_dict["item"],
             tracking=scan_dict["tracking"],
             location=settings.LOCATION_CODE,
         )
-        new_scan.save()
 
+    else:
+
+        Scan.objects.create(sku='SCAN FAILED',location=settings.LOCATION_CODE)
+    
     return render(
         request,
         "partials/hx_table.html",
@@ -99,46 +95,56 @@ def scan_hx(request):
 
 
 def send_scans_hx(request):
-
     internet_status = 0
+    payload = {'data': []}
+    
 
     for scan in Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED"):
 
-        if is_connected("google.com"):
-
-            try:
-
-                app_key = settings.APP_KEY
-                scan_data = {
-                    "sku": scan.sku,
-                    "time_scan": scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
-                    "tracking": scan.tracking,
-                    "location": scan.location,
-                }
-                data_json = json.dumps(scan_data)
-
-                headers = CaseInsensitiveDict()
-                headers["Accept"] = "application/json"
-                headers["Content-type"] = "application/json"
-                headers["Authorization"] = "Token {}".format(app_key)
-
-                response = requests.post(
-                    "https://bddwscans.com/endpoint/", data=data_json, headers=headers
+        payload['data'].append(
+                {
+                    'type': 'scans',
+                    'id' : str(scan.scan_id),
+                    'attributes': {
+                        'sku': scan.sku,
+                        'location': scan.location,
+                        'tracking': scan.tracking,
+                        'time_scan': scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                        }
+                    }
                 )
+    if is_connected("google.com"):
 
-                if response.status_code == 200:
-                    print(response.json())
-                    scan.scan_id = response.json()["scan_id"]
-                    scan.time_upload = response.json()["time_upload"]
-                    scan.save()
+        try:
 
-                if response.status_code == 403:
-                    print("API KEY ERROR")
+            app_key = settings.APP_KEY
+             
+            data_json = json.dumps(payload)
 
-                internet_status = 1
-            
-            except KeyError:
-                pass
+            headers = CaseInsensitiveDict()
+            headers["Accept"] = "application/json"
+            headers["Content-type"] = "application/json"
+            headers["Authorization"] = "Token {}".format(app_key)
+
+            response = requests.post(
+                settings.SCANS_API_ENDPOINT, data=data_json, headers=headers
+            )
+            print(response.json())
+            if response.status_code == 200:
+                for obj in response.json()['data']:
+                    
+                    return_scan = Scan.objects.get(scan_id=obj['id'])
+                    return_scan.time_upload = obj['attributes']['time_upload']
+                    return_scan.save()
+                    print(return_scan.scan_id)
+
+            if response.status_code == 403:
+                print("API KEY ERROR")
+
+            internet_status = 1
+        
+        except KeyError:
+            pass
 
     return render(
         request,
@@ -148,3 +154,14 @@ def send_scans_hx(request):
             "internet_status": internet_status,
         },
     )
+
+def delete_scan_hx(request, pk):
+    from django.http import HttpResponse
+    
+    try:
+        Scan.objects.get(id=pk).delete()
+    
+    except Scan.DoesNotExist:
+        pass
+    
+    return HttpResponse('')
