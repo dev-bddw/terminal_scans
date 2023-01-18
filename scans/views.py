@@ -2,6 +2,7 @@ import json
 
 import requests
 from django.conf import settings
+from django.http import HttpResponse 
 from django.shortcuts import render
 from requests.structures import CaseInsensitiveDict
 
@@ -167,3 +168,10 @@ def delete_scan_hx(request, pk):
         pass
     
     return HttpResponse('')
+
+def clear_bad_scans(request):
+
+    Scan.objects.filter(time_upload=None).delete() 
+    Scan.objects.filter(tracking=None).delete() 
+    
+    return HttpResponse('Done')
