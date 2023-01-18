@@ -98,8 +98,10 @@ def send_scans_hx(request):
     internet_status = 0
     payload = {'data': []}
     
+    Scan.objects.filter(sku="").update(sku="NONE")
 
-    for scan in Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED"):
+
+    for scan in Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED").exclude(sku=''):
 
         payload['data'].append(
                 {
@@ -145,7 +147,7 @@ def send_scans_hx(request):
         
         except KeyError:
             pass
-
+    
     return render(
         request,
         "partials/hx_table.html",
