@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('scans', '0008_alter_scan_options'),
+        ("scans", "0008_alter_scan_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='scan',
-            name='tracking',
+            model_name="scan",
+            name="tracking",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

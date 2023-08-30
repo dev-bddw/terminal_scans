@@ -2,7 +2,7 @@ import json
 
 import requests
 from django.conf import settings
-from django.http import HttpResponse 
+from django.http import HttpResponse
 from django.shortcuts import render
 from requests.structures import CaseInsensitiveDict
 
@@ -23,7 +23,7 @@ def button_test_hx(request):
     has_non_uploaded = False
 
     for scan in scans:
-        if scan.time_upload is None and scan.sku != 'SCAN FAILED':
+        if scan.time_upload is None and scan.sku != "SCAN FAILED":
             has_non_uploaded = True
             break
 
@@ -60,20 +60,20 @@ def scan_hx(request):
 
     scanner_input = request.POST.get("sku")
 
-    if scanner_input != "" and scanner_input[0] != " " and 'sy://' not in scanner_input:
-        
+    if scanner_input != "" and scanner_input[0] != " " and "sy://" not in scanner_input:
+
         try:
             scan_dict = json.loads(scanner_input)
         except json.decoder.JSONDecodeError:
-            scan_dict = {'tracking': ''}
-    
+            scan_dict = {"tracking": ""}
+
     elif "sy://" in scanner_input:
         scan_dict = process_sortly(scanner_input)
-    
-    else: 
-        scan_dict = {'tracking': ''}
 
-    if scan_dict['tracking'] != '':
+    else:
+        scan_dict = {"tracking": ""}
+
+    if scan_dict["tracking"] != "":
 
         Scan.objects.create(
             sku=scan_dict["item"],
@@ -83,8 +83,8 @@ def scan_hx(request):
 
     else:
 
-        Scan.objects.create(sku='SCAN FAILED',location=settings.LOCATION_CODE)
-    
+        Scan.objects.create(sku="SCAN FAILED", location=settings.LOCATION_CODE)
+
     return render(
         request,
         "partials/hx_table.html",
@@ -97,31 +97,32 @@ def scan_hx(request):
 
 def send_scans_hx(request):
     internet_status = 0
-    payload = {'data': []}
-    
+    payload = {"data": []}
+
     Scan.objects.filter(sku="").update(sku="NONE")
 
+    for scan in (
+        Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED").exclude(sku="")
+    ):
 
-    for scan in Scan.objects.filter(time_upload=None).exclude(sku="SCAN FAILED").exclude(sku=''):
-
-        payload['data'].append(
-                {
-                    'type': 'scans',
-                    'id' : str(scan.scan_id),
-                    'attributes': {
-                        'sku': scan.sku,
-                        'location': scan.location,
-                        'tracking': scan.tracking,
-                        'time_scan': scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
-                        }
-                    }
-                )
+        payload["data"].append(
+            {
+                "type": "scans",
+                "id": str(scan.scan_id),
+                "attributes": {
+                    "sku": scan.sku,
+                    "location": scan.location,
+                    "tracking": scan.tracking,
+                    "time_scan": scan.time_scan.strftime("%Y-%m-%dT%H:%M:%S.%f%z"),
+                },
+            }
+        )
     if is_connected("google.com"):
 
         try:
 
             app_key = settings.APP_KEY
-             
+
             data_json = json.dumps(payload)
 
             headers = CaseInsensitiveDict()
@@ -134,10 +135,10 @@ def send_scans_hx(request):
             )
             print(response.json())
             if response.status_code == 200:
-                for obj in response.json()['data']:
-                    
-                    return_scan = Scan.objects.get(scan_id=obj['id'])
-                    return_scan.time_upload = obj['attributes']['time_upload']
+                for obj in response.json()["data"]:
+
+                    return_scan = Scan.objects.get(scan_id=obj["id"])
+                    return_scan.time_upload = obj["attributes"]["time_upload"]
                     return_scan.save()
                     print(return_scan.scan_id)
 
@@ -145,10 +146,10 @@ def send_scans_hx(request):
                 print("API KEY ERROR")
 
             internet_status = 1
-        
+
         except KeyError:
             pass
-    
+
     return render(
         request,
         "partials/hx_table.html",
@@ -158,20 +159,21 @@ def send_scans_hx(request):
         },
     )
 
+
 def delete_scan_hx(request, pk):
-    from django.http import HttpResponse
-    
+
     try:
         Scan.objects.get(id=pk).delete()
-    
+
     except Scan.DoesNotExist:
         pass
-    
-    return HttpResponse('')
+
+    return HttpResponse("")
+
 
 def clear_bad_scans(request):
 
-    Scan.objects.filter(time_upload=None).delete() 
-    Scan.objects.filter(tracking=None).delete() 
-    
-    return HttpResponse('Done')
+    Scan.objects.filter(time_upload=None).delete()
+    Scan.objects.filter(tracking=None).delete()
+
+    return HttpResponse("Done")

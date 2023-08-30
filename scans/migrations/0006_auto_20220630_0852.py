@@ -7,50 +7,50 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('scans', '0005_auto_20220627_1250'),
+        ("scans", "0005_auto_20220627_1250"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='scan',
-            options={'ordering': ['time_scan']},
+            name="scan",
+            options={"ordering": ["time_scan"]},
         ),
         migrations.RenameField(
-            model_name='scan',
-            old_name='created_at',
-            new_name='time_scan',
+            model_name="scan",
+            old_name="created_at",
+            new_name="time_scan",
         ),
         migrations.RemoveField(
-            model_name='scan',
-            name='item_name',
+            model_name="scan",
+            name="item_name",
         ),
         migrations.RemoveField(
-            model_name='scan',
-            name='last_location',
+            model_name="scan",
+            name="last_location",
         ),
         migrations.RemoveField(
-            model_name='scan',
-            name='location_now',
+            model_name="scan",
+            name="location_now",
         ),
         migrations.AddField(
-            model_name='scan',
-            name='location',
+            model_name="scan",
+            name="location",
             field=models.IntegerField(default=None),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='scan',
-            name='scan_id',
+            model_name="scan",
+            name="scan_id",
             field=models.UUIDField(blank=True, default=uuid.uuid4, null=True),
         ),
         migrations.AddField(
-            model_name='scan',
-            name='time_upload',
+            model_name="scan",
+            name="time_upload",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='scan',
-            name='sku',
+            model_name="scan",
+            name="sku",
             field=models.CharField(max_length=200),
         ),
     ]

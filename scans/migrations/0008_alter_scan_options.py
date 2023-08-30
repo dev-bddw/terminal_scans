@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('scans', '0007_alter_scan_scan_id'),
+        ("scans", "0007_alter_scan_scan_id"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='scan',
-            options={'ordering': ['-time_scan']},
+            name="scan",
+            options={"ordering": ["-time_scan"]},
         ),
     ]

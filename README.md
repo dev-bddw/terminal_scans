@@ -39,7 +39,7 @@ at bottom
 
 > cd django-projects
 
-> git clone https://github.com/dev-bddw/terminal_scans.git
+> git clone https://github.com/dev-rlf/terminal_scans.git
 
 # config local settings
 

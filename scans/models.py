@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+
 class Scan(models.Model):
 
     sku = models.CharField(blank=False, null=False, max_length=200)

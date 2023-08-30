@@ -1,5 +1,5 @@
 sku_dict = {
-    "details": ('sortly label conversion', 'updated 010222'),
+    "details": ("sortly label conversion", "updated 010222"),
     "S7X1ZT1213": ("20070002", "TN-01001911"),
     "S7X1ZT0409": ("20070007", "TN-01003091"),
     "S7X1ZT0410": ("20070008", "TN-01003092"),

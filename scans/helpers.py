@@ -28,6 +28,6 @@ def process_sortly(code: str) -> dict:
 
     sortly_id = code.split("/")[-1]
 
-    bddw_sku,tracking_number = sku_dict.get(sortly_id, ('',''))
+    bddw_sku, tracking_number = sku_dict.get(sortly_id, ("", ""))
 
     return {"item": bddw_sku, "tracking": tracking_number}
