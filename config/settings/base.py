@@ -291,7 +291,7 @@ LOCATION_NAME = env(
 )
 
 SCANS_API_ENDPOINT = env(
-    "SCANS_API_ENDPOINT", default="https://bddwscans.com/endpoint/"
+    "SCANS_API_ENDPOINT", default="https://www.rlfscans.com/endpoint/"
 )
 
 
