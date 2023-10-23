@@ -71,4 +71,12 @@ RUN WSL -- start wsl.exe any user on startup
 
 START TERMINAL SCANS -- start bash script any user on startup
 
+# ALTERNATIVELY
+
+You can also setup the bash script as a cron job to run on reboot and then create a task that just starts the cronjob service in the VM.
+
+crontab -e
+@reboot /bin/bash/ /etc/wsl-init
+
+
 # ALL DONE
