@@ -8,6 +8,7 @@ from .views import (
     send_scans_hx,
     delete_scan_hx,
     clear_bad_scans,
+    toggle_scan_mode_hx,
 )
 
 app_name = "scans"
@@ -20,4 +21,5 @@ urlpatterns = [
     path("button-poll", view=button_test_hx, name="hx_button_poll"),
     path("clear/", clear_bad_scans, name="clear_bad_scans"),
     path("delete-scan/<pk>", view=delete_scan_hx, name="delete_scan_hx"),
+    path("toggle-scan-mode", view=toggle_scan_mode_hx, name="toggle_scan_mode"),
 ]

@@ -43,6 +43,9 @@ def button_test_hx(request):
 def scan_home_page(request):
 
     scans = Scan.objects.all().order_by("-time_scan")
+    
+    # Get scan mode from session, default to IN
+    scan_mode = request.session.get("scan_mode", "IN")
 
     return render(
         request,
@@ -53,8 +56,21 @@ def scan_home_page(request):
             "scan_button_on": False,
             "location_name": settings.LOCATION_NAME,
             "location_code": settings.LOCATION_CODE,
+            "scan_mode": scan_mode,
         },
     )
+
+
+def toggle_scan_mode_hx(request):
+    """Toggle scan mode between IN and OUT - called via AJAX"""
+    current_mode = request.session.get("scan_mode", "IN")
+    new_mode = "OUT" if current_mode == "IN" else "IN"
+    request.session["scan_mode"] = new_mode
+    request.session.modified = True
+    
+    # Return JSON response for AJAX call
+    from django.http import JsonResponse
+    return JsonResponse({"status": "success", "mode": new_mode})
 
 
 def scan_hx(request):
@@ -74,17 +90,25 @@ def scan_hx(request):
     else:
         scan_dict = {"tracking": ""}
 
+    # Get scan mode from session, default to IN
+    scan_mode = request.session.get("scan_mode", "IN")
+    
+    # Calculate location code based on mode
+    location_code = settings.LOCATION_CODE
+    if scan_mode == "OUT":
+        location_code = settings.LOCATION_CODE + 10
+
     if scan_dict["tracking"] != "":
 
         Scan.objects.create(
             sku=scan_dict["item"],
             tracking=scan_dict["tracking"],
-            location=settings.LOCATION_CODE,
+            location=location_code,
         )
 
     else:
 
-        Scan.objects.create(sku="SCAN FAILED", location=settings.LOCATION_CODE)
+        Scan.objects.create(sku="SCAN FAILED", location=location_code)
 
     return render(
         request,

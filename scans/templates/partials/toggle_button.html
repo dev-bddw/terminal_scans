@@ -1,0 +1,2 @@
+<button id="in-out-toggle" type="button" class="btn btn-lg" style="background-color: {% if scan_mode == "IN" %}#28a745{% else %}#dc3545{% endif %}; color: white; font-size: 30px; font-weight: bold; padding: 10px 30px; margin-top: 10px;" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-post="{% url 'scans:toggle_scan_mode' %}" hx-target="#in-out-toggle" hx-swap="outerHTML">{% if scan_mode == "IN" %}IN{% else %}OUT{% endif %}</button>
+

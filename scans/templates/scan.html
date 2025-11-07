@@ -7,7 +7,12 @@
     <h5 style="font-size: 75px;">BDDW SCAN</h5>
     <h3 style="font-size: 50px;">{{location_name}}</h3>
     <p style="font-size: 30px;">Location Code: {{location_code}}</p>
-    <button id="in-out-toggle" type="button" class="btn btn-lg" style="background-color: #28a745; color: white; font-size: 30px; font-weight: bold; padding: 10px 30px; margin-top: 10px;">IN</button>
+    <button id="in-out-toggle" type="button" class="btn btn-lg" 
+            style="background-color: {% if scan_mode == "IN" %}#28a745{% else %}#dc3545{% endif %}; color: white; font-size: 30px; font-weight: bold; padding: 10px 30px; margin-top: 10px;"
+            onclick="toggleButton(this);"
+            data-mode="{% if scan_mode == "IN" %}IN{% else %}OUT{% endif %}">
+      {% if scan_mode == "IN" %}IN{% else %}OUT{% endif %}
+    </button>
 
     <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">ESTABLISHING CONNECTION</p>
     <div class="header-padding" style="height:15px">
@@ -94,20 +99,28 @@
   }
   setInterval(orientInput, 10000);
   
-  // Toggle IN/OUT button
-  document.addEventListener('DOMContentLoaded', function() {
-    const toggleBtn = document.getElementById('in-out-toggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', function() {
-        if (toggleBtn.textContent === 'IN') {
-          toggleBtn.textContent = 'OUT';
-          toggleBtn.style.backgroundColor = '#dc3545'; // Red
-        } else {
-          toggleBtn.textContent = 'IN';
-          toggleBtn.style.backgroundColor = '#28a745'; // Green
-        }
-      });
+  // Toggle IN/OUT button with immediate visual feedback
+  function toggleButton(btn) {
+    // Immediate visual feedback
+    if (btn.textContent.trim() === 'IN') {
+      btn.textContent = 'OUT';
+      btn.style.backgroundColor = '#dc3545';
+      btn.dataset.mode = 'OUT';
+    } else {
+      btn.textContent = 'IN';
+      btn.style.backgroundColor = '#28a745';
+      btn.dataset.mode = 'IN';
     }
-  });
+    
+    // Save to session in background (non-blocking)
+    fetch('{% url "scans:toggle_scan_mode" %}', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin'
+    }).catch(err => console.error('Failed to save state:', err));
+  }
   </script>
 {% endblock inline_javascript %}
