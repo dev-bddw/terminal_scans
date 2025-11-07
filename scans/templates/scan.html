@@ -6,6 +6,8 @@
   <div class="text-center">
     <h5 style="font-size: 75px;">BDDW SCAN</h5>
     <h3 style="font-size: 50px;">{{location_name}}</h3>
+    <p style="font-size: 30px;">Location Code: {{location_code}}</p>
+    <button id="in-out-toggle" type="button" class="btn btn-lg" style="background-color: #28a745; color: white; font-size: 30px; font-weight: bold; padding: 10px 30px; margin-top: 10px;">IN</button>
 
     <p class="pt-1" hx-get="{% url 'scans:internet_poll' %}" hx-trigger="every 2s" hx-target="this" hx-swap="outerHTML" style="font-size:20px">ESTABLISHING CONNECTION</p>
     <div class="header-padding" style="height:15px">
@@ -91,5 +93,21 @@
     sku_input.select()
   }
   setInterval(orientInput, 10000);
+  
+  // Toggle IN/OUT button
+  document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('in-out-toggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function() {
+        if (toggleBtn.textContent === 'IN') {
+          toggleBtn.textContent = 'OUT';
+          toggleBtn.style.backgroundColor = '#dc3545'; // Red
+        } else {
+          toggleBtn.textContent = 'IN';
+          toggleBtn.style.backgroundColor = '#28a745'; // Green
+        }
+      });
+    }
+  });
   </script>
 {% endblock inline_javascript %}
