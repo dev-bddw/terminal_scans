@@ -95,22 +95,29 @@
   <script>
   function orientInput(){
     const sku_input = document.getElementById('sku');
-    sku_input.select()
+    if (sku_input) {
+      sku_input.focus();
+      sku_input.select();
+    }
   }
-  setInterval(orientInput, 10000);
+  
+  // Focus input on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    orientInput();
+  });
+  
+  // Focus input more frequently
+  setInterval(orientInput, 2000);  // Every 2 seconds instead of 10
   
   // Toggle IN/OUT button with immediate visual feedback
   function toggleButton(btn) {
     // Immediate visual feedback
-    if (btn.textContent.trim() === 'IN') {
-      btn.textContent = 'OUT';
-      btn.style.backgroundColor = '#dc3545';
-      btn.dataset.mode = 'OUT';
-    } else {
-      btn.textContent = 'IN';
-      btn.style.backgroundColor = '#28a745';
-      btn.dataset.mode = 'IN';
-    }
+    const currentMode = btn.dataset.mode || btn.textContent.trim();
+    const newMode = currentMode === 'IN' ? 'OUT' : 'IN';
+    
+    btn.textContent = newMode;
+    btn.style.backgroundColor = newMode === 'IN' ? '#28a745' : '#dc3545';
+    btn.dataset.mode = newMode;
     
     // Save to session in background (non-blocking)
     fetch('{% url "scans:toggle_scan_mode" %}', {
@@ -120,7 +127,29 @@
         'Content-Type': 'application/json',
       },
       credentials: 'same-origin'
-    }).catch(err => console.error('Failed to save state:', err));
+    }).then(response => response.json())
+      .then(data => {
+        // Update button state from server response
+        if (data.mode) {
+          btn.textContent = data.mode;
+          btn.style.backgroundColor = data.mode === 'IN' ? '#28a745' : '#dc3545';
+          btn.dataset.mode = data.mode;
+        }
+      })
+      .catch(err => console.error('Failed to save state:', err));
   }
+  
+  // Focus input after HTMX updates (but DON'T toggle the mode!)
+  document.body.addEventListener('htmx:afterSwap', function(event) {
+    if (event.detail.target.id === 'table') {
+      // Focus the input field after table update
+      setTimeout(function() {
+        orientInput();
+      }, 100);
+      
+      // DO NOT call toggle_scan_mode here - that's what's causing the toggle!
+      // The button state should persist via session, no need to fetch it
+    }
+  });
   </script>
 {% endblock inline_javascript %}

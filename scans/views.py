@@ -18,7 +18,7 @@ def connection_test(request):
 
 
 def button_test_hx(request):
-    scans = Scan.objects.all().order_by("-time_scan")
+    scans = Scan.objects.all().order_by("-time_scan")[:100]  # Limit for performance
 
     has_non_uploaded = False
 
@@ -42,7 +42,7 @@ def button_test_hx(request):
 
 def scan_home_page(request):
 
-    scans = Scan.objects.all().order_by("-time_scan")
+    scans = Scan.objects.all().order_by("-time_scan")[:100]  # Limit for performance
     
     # Get scan mode from session, default to IN
     scan_mode = request.session.get("scan_mode", "IN")
@@ -67,6 +67,7 @@ def toggle_scan_mode_hx(request):
     new_mode = "OUT" if current_mode == "IN" else "IN"
     request.session["scan_mode"] = new_mode
     request.session.modified = True
+    request.session.save()  # Explicitly save session
     
     # Return JSON response for AJAX call
     from django.http import JsonResponse
@@ -90,7 +91,7 @@ def scan_hx(request):
     else:
         scan_dict = {"tracking": ""}
 
-    # Get scan mode from session, default to IN
+    # Get scan mode from session, default to IN (READ ONLY - don't modify session)
     scan_mode = request.session.get("scan_mode", "IN")
     
     # Calculate location code based on mode
@@ -114,7 +115,7 @@ def scan_hx(request):
         request,
         "partials/hx_table.html",
         {
-            "scans": Scan.objects.all().order_by("-time_scan"),
+            "scans": Scan.objects.all().order_by("-time_scan")[:100],  # Limit for performance
             "scan_button_on": False,
         },
     )
@@ -179,7 +180,7 @@ def send_scans_hx(request):
         request,
         "partials/hx_table.html",
         {
-            "scans": Scan.objects.all().order_by("-time_scan"),
+            "scans": Scan.objects.all().order_by("-time_scan")[:100],  # Limit for performance
             "internet_status": internet_status,
         },
     )

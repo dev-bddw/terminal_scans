@@ -53,6 +53,13 @@
 
 
 <script>
-  document.getElementById('sku').value = '';
-  document.getElementById('sku').select();
+  // Clear and focus input after HTMX swap
+  setTimeout(function() {
+    const skuInput = document.getElementById('sku');
+    if (skuInput) {
+      skuInput.value = '';
+      skuInput.focus();
+      skuInput.select();
+    }
+  }, 100);  // Small delay to ensure DOM is ready
 </script>
