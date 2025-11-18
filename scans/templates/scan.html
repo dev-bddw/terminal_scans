@@ -6,7 +6,6 @@
   <div class="text-center">
     <h5 style="font-size: 75px;">BDDW SCAN</h5>
     <h3 style="font-size: 50px;">{{location_name}}</h3>
-    <p style="font-size: 30px;">Location Code: {{location_code}}</p>
     <button id="in-out-toggle" type="button" class="btn btn-lg" 
             style="background-color: {% if scan_mode == "IN" %}#28a745{% else %}#dc3545{% endif %}; color: white; font-size: 30px; font-weight: bold; padding: 10px 30px; margin-top: 10px;"
             onclick="toggleButton(this);"
